@@ -3,20 +3,38 @@ from django.db import models
 class Material(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Shape(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Language(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Genre(models.Model):
     name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class Provenance(models.Model):
     name = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.name
+
 class Publication(models.Model):
     content = models.TextField()
+
+    def __str__(self):
+        return self.content
 
 class Papyrus(models.Model):
     inventory_number = models.CharField(max_length=100)
@@ -27,6 +45,9 @@ class Papyrus(models.Model):
 
     class Meta:
         verbose_name_plural = "papyri"
+
+    def __str__(self):
+        return f'{self.inventory_number} - {self.material} - {self.shape}'
 
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
@@ -42,6 +63,9 @@ class PapyrusSide(models.Model):
     concave = models.BooleanField(default=False)
     publication = models.ForeignKey(Publication, on_delete=models.DO_NOTHING, null=True, blank=True)
     links = models.JSONField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.papyrus.inventory_number} - {self.title} - {self.language}'
 
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
