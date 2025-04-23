@@ -16,7 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from papyrus.views import PapyrusSideListView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('papyrus-sides/', PapyrusSideListView.as_view(), name='papyrus_side_list'),
 ]
