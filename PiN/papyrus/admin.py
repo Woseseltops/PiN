@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication
+from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication, Image
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
@@ -30,3 +30,7 @@ class PapyrusSideInline(admin.StackedInline):
 class PapyrusAdmin(admin.ModelAdmin):
     autocomplete_fields = ['material', 'shape']
     inlines = [PapyrusSideInline]
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ('papyrus_side', 'image')
