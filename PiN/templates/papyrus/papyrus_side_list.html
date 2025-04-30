@@ -4,11 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Papyrus Sides</title>
+
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+    var minYear = 0;
+    var maxYear = 500;
+    var keywords = "";
+
+    function updateList()
+    {
+        var search = $("#search").val().toLowerCase();
+        $("tr").each(function()
+        {
+            if ($(this).hasClass("header"))
+            {
+                return;
+            }
+
+            var title = $(this).find("td:nth-child(2)").text().toLowerCase();
+            var year = parseInt($(this).attr("year"));
+            if (title.includes(search) && year >= minYear && year <= maxYear)
+            {
+                $(this).show();
+            }
+            else
+            {
+                $(this).hide();
+            }
+        });
+    }
+
+    $(function()
+    {
+      $("#slider-range").slider({
+        range: true,
+        min: 0,
+        max: 500,
+        values: [0, 500],
+        slide: function(event, ui)
+        {
+            minYear = ui.values[0];
+            maxYear = ui.values[1];
+            updateList();
+            $("#range-indicator").text("Selected range: " + ui.values[0] + " - " + ui.values[1]);
+        }
+      });
+    });
+
+    $(document).ready(function()
+    {
+        $("#search").on("input", function()
+        {
+            keywords = $(this).val().toLowerCase();
+            updateList();
+        });
+    });
+    </script>
+
 </head>
 <body>
+    <input type="text" id="search" placeholder="Search by title">
+
+    <div id="slider-range"></div>
+    <br>
+    <p id="range-indicator">Selected range: 0-500</p>
     <table border="1">
         <thead>
-            <tr>
+            <tr class="header">
                 <th>Inventory nr</th>
                 <th>Title</th>
                 <th>Date</th>
@@ -18,7 +83,7 @@
         </thead>
         <tbody>
             {% for side in papyrus_sides %}
-            <tr>
+            <tr year="{{ side.date.year }} ">
                 <td>{{ side.papyrus.inventory_number }}</td>
                 <td>{{ side.title }}</td>
                 <td>{{ side.date }}</td>
