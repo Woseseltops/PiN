@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-l5a3d73n3588f2%7zv)j#6d1#d4+)!p)l16gu=3skel(e_-kt)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pin-dev.rich.ru.nl","pin.rich.ru.nl"]
 
 
 # Application definition
@@ -123,3 +123,5 @@ STATICFILES_DIRS = [BASE_DIR / "static", "/var/www/static/"]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = ["pin-dev.rich.ru.nl","pin.rich.ru.nl"]

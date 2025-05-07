@@ -53,7 +53,7 @@ class Dimension(models.Model):
     item = models.ForeignKey(Papyrus, related_name='dimensions', on_delete=models.CASCADE)
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
-    
+
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
