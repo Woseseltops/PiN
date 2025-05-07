@@ -49,6 +49,11 @@ class Papyrus(models.Model):
     def __str__(self):
         return f'{self.inventory_number} - {self.material} - {self.shape}'
 
+class Dimension(models.Model):
+    item = models.ForeignKey(Papyrus, related_name='dimensions', on_delete=models.CASCADE)
+    width = models.PositiveIntegerField()
+    height = models.PositiveIntegerField()
+    
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
@@ -70,3 +75,4 @@ class PapyrusSide(models.Model):
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='papyrus_images/')
+    credit = models.CharField(max_length=255, null=True, blank=True)
