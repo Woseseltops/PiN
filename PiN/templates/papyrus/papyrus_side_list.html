@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Papyrus Sides</title>
 
+    <link rel="stylesheet" href="{% static 'css/bootstrap_ru.css' %}">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
@@ -66,38 +69,51 @@
 
 </head>
 <body>
-    <input type="text" id="search" placeholder="Search by title">
 
-    <div id="slider-range"></div>
-    <br>
-    <p id="range-indicator">Selected range: 0-500</p>
-    <table border="1">
-        <thead>
-            <tr class="header">
-                <th>Inventory nr</th>
-                <th>Title</th>
-                <th>Date</th>
-                <th>Provenance</th>
-                <th>Thumbnail</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for side in papyrus_sides %}
-            <tr year="{{ side.date.year }} ">
-                <td>{{ side.papyrus.inventory_number }}</td>
-                <td>{{ side.title }}</td>
-                <td>{{ side.date }}</td>
-                <td>{{ side.papyrus.finding_location }}</td>
-                <td>
-                    {% if side.images.first %}
-                        <img src="{{ side.images.first.image.url }}" alt="Thumbnail" width="100">
-                    {% else %}
-                        No Image
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <nav class="navbar navbar-expand-md mb-4 border">
+        <div class="container">
+            <a href="https://www.ru.nl" class="d-none d-sm-block">
+                <img src="https://cls.ru.nl/RU_logo.svg" class="navbar-brand" style="height: 3rem"/>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container mb5">
+        <input type="text" id="search" class="form-control form-control-sm" placeholder="Search by title">
+        <br>
+        <br>
+
+        <div id="slider-range"></div>
+        <br>
+        <p id="range-indicator">Selected range: 0-500</p>
+        <table class="table table-sm">
+            <thead>
+                <tr class="header">
+                    <th>Inventory nr</th>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Provenance</th>
+                    <th>Thumbnail</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for side in papyrus_sides %}
+                <tr year="{{ side.date.year }} ">
+                    <td>{{ side.papyrus.inventory_number }}</td>
+                    <td>{{ side.title }}</td>
+                    <td>{{ side.date }}</td>
+                    <td>{{ side.papyrus.finding_location }}</td>
+                    <td>
+                        {% if side.images.first %}
+                            <img src="{{ side.images.first.image.url }}" alt="Thumbnail" width="100">
+                        {% else %}
+                            No Image
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
 </body>
 </html>
