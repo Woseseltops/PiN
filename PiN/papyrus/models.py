@@ -51,18 +51,27 @@ class Papyrus(models.Model):
 
 class Dimension(models.Model):
     item = models.ForeignKey(Papyrus, related_name='dimensions', on_delete=models.CASCADE)
-    width = models.PositiveIntegerField()
-    height = models.PositiveIntegerField()
+    width = models.FloatField(null=True, blank=True)
+    height = models.FloatField(null=True, blank=True)
+
+class Link(models.Model):
+    item = models.ForeignKey(Papyrus, related_name='links', on_delete=models.CASCADE)
+    url = models.URLField()
+    description = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.url} - {self.description}'
 
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
     genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
-    date = models.DateField()
-    date_start = models.DateField(null=True, blank=True)
-    date_end = models.DateField(null=True, blank=True)
-    content = models.TextField()
+    year = models.IntegerField(null=True, blank=True)
+    year_start = models.IntegerField(null=True, blank=True)
+    year_end = models.IntegerField(null=True, blank=True)
+    specific_date = models.TextField(null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
     parallel = models.BooleanField(default=False)
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)

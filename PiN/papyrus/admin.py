@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication, Image, Dimension
+from django import forms
+from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication, Image, Dimension, Link
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
@@ -23,20 +24,31 @@ class PublicationAdmin(admin.ModelAdmin):
 
 class DimensionInline(admin.TabularInline):  # or admin.StackedInline
     model = Dimension
-    extra = 1  # how many empty forms to show
+    extra = 0  # how many empty forms to show
     min_num = 1
-    verbose_name = "Dimension"
-    verbose_name_plural = "Dimensions"
+
+class LinkInline(admin.TabularInline):
+    model = Link
+    extra = 1  # Number of empty forms to display
+
+class PapyrusSideForm(forms.ModelForm):
+    class Meta:
+        model = PapyrusSide
+        fields = '__all__'
+        labels = {
+            'parallel': 'Parallel to the fibres',
+        }
 
 class PapyrusSideInline(admin.StackedInline):
     model = PapyrusSide
+    form = PapyrusSideForm
     extra = 1  # Number of empty forms to display
     autocomplete_fields = ['language', 'genre', 'publication']
 
 @admin.register(Papyrus)
 class PapyrusAdmin(admin.ModelAdmin):
     autocomplete_fields = ['material', 'shape']
-    inlines = [DimensionInline, PapyrusSideInline]
+    inlines = [DimensionInline, PapyrusSideInline, LinkInline]
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):

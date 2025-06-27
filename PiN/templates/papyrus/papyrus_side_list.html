@@ -91,17 +91,17 @@
                 <tr class="header">
                     <th>Inventory nr</th>
                     <th>Title</th>
-                    <th>Date</th>
+                    <th>Year</th>
                     <th>Provenance</th>
                     <th>Thumbnail</th>
                 </tr>
             </thead>
             <tbody>
                 {% for side in papyrus_sides %}
-                <tr year="{{ side.date.year }} ">
+                <tr year="{{ side.year }} ">
                     <td>{{ side.papyrus.inventory_number }}</td>
                     <td>{{ side.title }}</td>
-                    <td>{{ side.date }}</td>
+                    <td>{{ side.year }}</td>
                     <td>{{ side.papyrus.finding_location }}</td>
                     <td>
                         {% if side.images.first %}
