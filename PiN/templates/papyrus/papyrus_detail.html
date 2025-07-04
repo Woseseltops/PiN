@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Papyrus Sides</title>
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap_ru.css' %}">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
+    <style>
+    .fw-bold
+    {
+        font-weight: bold;
+    }
+    </style>
+
+    <script>
+
+    function showSide(index) 
+    {
+        // Hide all side tables
+        $('table.side-table').hide();
+        // Show the selected side table
+        $('#side_table_' + index).show();
+
+        $('button[id^="side_"]').addClass('btn-link');
+        $('button[id^="side_"]').removeClass('fw-bold');
+
+        $('#side_' + index).removeClass('btn-link');
+        $('#side_' + index).addClass('fw-bold');
+    }
+
+    $(document).ready(function() {
+        // Initially hide all side tables except the first one
+        showSide(1);
+
+        // Add click event to each button
+        $('button[id^="side_"]').click(function() {
+            var sideId = $(this).attr('id').split('_')[1];
+            showSide(sideId);
+        });
+    });
+    </script>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-md mb-4 border">
+        <div class="container">
+            <a href="https://www.ru.nl" class="d-none d-sm-block">
+                <img src="https://cls.ru.nl/RU_logo.svg" class="navbar-brand" style="height: 3rem"/>
+            </a>
+        </div>
+    </nav>
+
+    <main class="container mb5">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Inventory Number</th>
+                    <th scope="col">Material</th>
+                    <th scope="col">Shape</th>
+                    <th scope="col">Finding Location</th>
+                    <th scope="col">Current Location</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ papyrus.inventory_number }}</td>
+                    <td>{{ papyrus.material.name }}</td>
+                    <td>{{ papyrus.shape.name }}</td>
+                    <td>{{ papyrus.finding_location }}</td>
+                    <td>{{ papyrus.current_location }}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div id="side_button_area">
+        {% for side in papyrus.sides.all %}
+            <button class="btn btn-link" id="side_{{side.pk}}">{{ side.title }}</button>
+        {% endfor %}
+        </div>
+
+    <!-- papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
+    genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
+    year = models.IntegerField(null=True, blank=True)
+    year_start = models.IntegerField(null=True, blank=True)
+    year_end = models.IntegerField(null=True, blank=True)
+    specific_date = models.TextField(null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
+    parallel = models.BooleanField(default=False)
+    flesh = models.BooleanField(default=False)
+    concave = models.BooleanField(default=False)
+    publication = models.ForeignKey(Publication, on_delete=models.DO_NOTHING, null=True, blank=True)
+    links = models.JSONField(null=True, blank=True) -->
+
+        {% for side in papyrus.sides.all %}
+
+            <table class="table table-sm side-table" id="side_table_{{ side.pk }}">
+                <tbody>
+                    <tr>
+                        <th scope="row">Language</th>
+                        <td>{{ side.language.name }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Genre</th>
+                        <td>{{ side.genre.name }}</td> 
+                    </tr>
+                    <tr>
+                        <th scope="row">Year</th>
+                        <td>{{ side.year }}</td> 
+                    </tr>
+                    <tr>
+                        <th scope="row">Content</th>
+                        <td>{{ side.content }}</td>
+                    </tr>                
+                </tbody>
+            </table>
+
+        {% endfor %}
+
+    </main>
+</body>
+</html>

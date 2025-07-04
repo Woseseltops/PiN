@@ -99,7 +99,7 @@
             <tbody>
                 {% for side in papyrus_sides %}
                 <tr year="{{ side.year }} ">
-                    <td>{{ side.papyrus.inventory_number }}</td>
+                    <td><a href="/papyrus/{{ side.papyrus.pk }}">{{ side.papyrus.inventory_number }}</a></td>
                     <td>{{ side.title }}</td>
                     <td>{{ side.year }}</td>
                     <td>{{ side.papyrus.finding_location }}</td>
