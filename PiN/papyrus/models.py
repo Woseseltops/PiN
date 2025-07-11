@@ -36,12 +36,30 @@ class Publication(models.Model):
     def __str__(self):
         return self.content
 
+class FindingLocation(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class CurrentLocation(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 class Papyrus(models.Model):
     inventory_number = models.CharField(max_length=100)
     material = models.ForeignKey(Material, on_delete=models.DO_NOTHING)
     shape = models.ForeignKey(Shape, on_delete=models.DO_NOTHING)
-    finding_location = models.CharField(max_length=255)
-    current_location = models.CharField(max_length=255)
+
+    # Commented out for migration reasons, can be removed later
+    # finding_location = models.CharField(max_length=255, null=True, blank=True)
+    # current_location = models.CharField(max_length=255, null=True, blank=True)
+
+    finding_location = models.ForeignKey(FindingLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    current_location = models.ForeignKey(CurrentLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
+
 
     class Meta:
         verbose_name_plural = "papyri"
@@ -49,15 +67,29 @@ class Papyrus(models.Model):
     def __str__(self):
         return f'{self.inventory_number} - {self.material} - {self.shape}'
 
+class Dimension(models.Model):
+    item = models.ForeignKey(Papyrus, related_name='dimensions', on_delete=models.CASCADE)
+    width = models.FloatField(null=True, blank=True)
+    height = models.FloatField(null=True, blank=True)
+
+class Link(models.Model):
+    item = models.ForeignKey(Papyrus, related_name='links', on_delete=models.CASCADE)
+    url = models.URLField()
+    description = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.url} - {self.description}'
+
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
     genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
-    date = models.DateField()
-    date_start = models.DateField(null=True, blank=True)
-    date_end = models.DateField(null=True, blank=True)
-    content = models.TextField()
+    year = models.IntegerField(null=True, blank=True)
+    year_start = models.IntegerField(null=True, blank=True)
+    year_end = models.IntegerField(null=True, blank=True)
+    specific_date = models.TextField(null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
     parallel = models.BooleanField(default=False)
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)
@@ -70,3 +102,4 @@ class PapyrusSide(models.Model):
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='papyrus_images/')
+    credit = models.CharField(max_length=255, null=True, blank=True)
