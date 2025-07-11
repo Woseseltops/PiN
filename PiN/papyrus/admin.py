@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django import forms
-from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication, Image, Dimension, Link
+from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Publication, Image, Dimension, Link, FindingLocation, CurrentLocation
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
@@ -21,6 +21,14 @@ class GenreAdmin(admin.ModelAdmin):
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
     search_fields = ['content']
+
+@admin.register(FindingLocation)
+class FindingLocationAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+@admin.register(CurrentLocation)
+class CurrentLocationAdmin(admin.ModelAdmin):
+    search_fields = ['name']
 
 class DimensionInline(admin.TabularInline):  # or admin.StackedInline
     model = Dimension
@@ -47,7 +55,7 @@ class PapyrusSideInline(admin.StackedInline):
 
 @admin.register(Papyrus)
 class PapyrusAdmin(admin.ModelAdmin):
-    autocomplete_fields = ['material', 'shape']
+    autocomplete_fields = ['material', 'shape', 'finding_location', 'current_location']
     inlines = [DimensionInline, PapyrusSideInline, LinkInline]
 
 @admin.register(Image)

@@ -36,12 +36,30 @@ class Publication(models.Model):
     def __str__(self):
         return self.content
 
+class FindingLocation(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+class CurrentLocation(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 class Papyrus(models.Model):
     inventory_number = models.CharField(max_length=100)
     material = models.ForeignKey(Material, on_delete=models.DO_NOTHING)
     shape = models.ForeignKey(Shape, on_delete=models.DO_NOTHING)
-    finding_location = models.CharField(max_length=255)
-    current_location = models.CharField(max_length=255)
+
+    # Commented out for migration reasons, can be removed later
+    # finding_location = models.CharField(max_length=255, null=True, blank=True)
+    # current_location = models.CharField(max_length=255, null=True, blank=True)
+
+    finding_location = models.ForeignKey(FindingLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    current_location = models.ForeignKey(CurrentLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
+
 
     class Meta:
         verbose_name_plural = "papyri"
