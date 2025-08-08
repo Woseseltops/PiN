@@ -14,13 +14,13 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <script>
-    var minYear = 0;
-    var maxYear = 500;
-    var keywords = "";
+    let minYear = 0;
+    let maxYear = 500;
+    let keywords = "";
 
     function updateList()
     {
-        var search = $("#search").val().toLowerCase();
+        let search = $("#search").val().toLowerCase();
         $("tr").each(function()
         {
             if ($(this).hasClass("header"))
@@ -28,9 +28,26 @@
                 return;
             }
 
-            var title = $(this).find("td:nth-child(2)").text().toLowerCase();
-            var year = parseInt($(this).attr("year"));
-            if (title.includes(search) && year >= minYear && year <= maxYear)
+            let title = $(this).find("td:nth-child(2)").text().toLowerCase();
+            let year = parseInt($(this).attr("year"));
+
+            let yearMatch = false;
+
+            if (isNaN(year))
+            {
+                let yearStart = parseInt($(this).attr("year-start"));
+                let yearEnd = parseInt($(this).attr("year-end"));
+
+                yearMatch = (yearEnd > minYear && yearStart < maxYear);
+
+                console.log("Year Start: " + yearStart + ", Year End: " + yearEnd + " - Match: " + yearMatch);
+            }
+            else
+            {
+                yearMatch = (year >= minYear && year <= maxYear);
+            }
+
+            if (title.includes(search) && yearMatch)
             {
                 $(this).show();
             }
@@ -104,6 +121,7 @@
             <thead>
                 <tr class="header">
                     <th>Inventory nr</th>
+                    <th>Publication</th>
                     <th>Content</th>
                     <th>Year</th>
                     <th>Provenance</th>
@@ -112,10 +130,19 @@
             </thead>
             <tbody>
                 {% for side in papyrus_sides %}
-                <tr year="{{ side.year }} ">
-                    <td>{{ side.papyrus.inventory_number }}</td>
-                    <td>{{ side.content|slice:":25" }}{% if side.content|length > 25 %}...{% endif %}</td>
-                    <td>{{ side.year|ce_year }}</td>
+                <tr year="{{ side.year }}" year-start="{{ side.year_start }}" year-end="{{ side.year_end }}">
+                    <td><a href="/papyrus/{{ side.papyrus.pk }}">{{ side.papyrus.inventory_number }}</a></td>
+                    <td>{{ side.publication }}</td>
+                    <td>{{ side.content }}{% if side.content|length > 25 %}...{% endif %}</td>
+                    <td>
+                        {% if side.year != None %}
+                            {{ side.year|ce_year }}
+                        {% elif side.year_start != None and side.year_end != None %}
+                            {{ side.year_start|ce_year }} - {{ side.year_end|ce_year }}
+                        {% else %}
+                            Unknown
+                        {% endif %}
+                    </td>
                     <td>{{ side.papyrus.finding_location }}</td>
                     <td>
                         {% if side.images.first %}

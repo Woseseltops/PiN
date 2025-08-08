@@ -30,7 +30,8 @@ class Provenance(models.Model):
     def __str__(self):
         return self.name
 
-class Publication(models.Model):
+
+class Reference(models.Model):
     content = models.TextField()
 
     def __str__(self):
@@ -52,10 +53,6 @@ class Papyrus(models.Model):
     inventory_number = models.CharField(max_length=100)
     material = models.ForeignKey(Material, on_delete=models.DO_NOTHING)
     shape = models.ForeignKey(Shape, on_delete=models.DO_NOTHING)
-
-    # Commented out for migration reasons, can be removed later
-    # finding_location = models.CharField(max_length=255, null=True, blank=True)
-    # current_location = models.CharField(max_length=255, null=True, blank=True)
 
     finding_location = models.ForeignKey(FindingLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
     current_location = models.ForeignKey(CurrentLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
@@ -82,7 +79,7 @@ class Link(models.Model):
 
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    publication = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
     genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
     year = models.IntegerField(null=True, blank=True)
@@ -93,11 +90,11 @@ class PapyrusSide(models.Model):
     parallel = models.BooleanField(default=False)
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)
-    publication = models.ForeignKey(Publication, on_delete=models.DO_NOTHING, null=True, blank=True)
+    reference = models.ForeignKey(Reference, on_delete=models.DO_NOTHING, null=True, blank=True)
     links = models.JSONField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.papyrus.inventory_number} - {self.title} - {self.language}'
+        return f'{self.papyrus.inventory_number} - {self.publication} - {self.language}'
 
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
