@@ -91,7 +91,6 @@ class PapyrusSide(models.Model):
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)
     reference = models.ForeignKey(Reference, on_delete=models.DO_NOTHING, null=True, blank=True)
-    links = models.JSONField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.papyrus.inventory_number} - {self.publication} - {self.language}'

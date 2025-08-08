@@ -1,4 +1,5 @@
 {% load static %}
+{% load year %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -67,6 +68,7 @@
                     <th scope="col">Shape</th>
                     <th scope="col">Finding Location</th>
                     <th scope="col">Current Location</th>
+                    <th scope="col">Dimensions</th>
                 </tr>
             </thead>
             <tbody>
@@ -76,6 +78,15 @@
                     <td>{{ papyrus.shape.name }}</td>
                     <td>{{ papyrus.finding_location }}</td>
                     <td>{{ papyrus.current_location }}</td>
+                    <td>
+                        {% if papyrus.dimensions %}
+                            {% for dimension in papyrus.dimensions.all %}
+                                {{ dimension.width }} x {{ dimension.height }}<br>
+                            {% endfor %}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -86,25 +97,14 @@
         {% endfor %}
         </div>
 
-    <!-- papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
-    genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
-    year = models.IntegerField(null=True, blank=True)
-    year_start = models.IntegerField(null=True, blank=True)
-    year_end = models.IntegerField(null=True, blank=True)
-    specific_date = models.TextField(null=True, blank=True)
-    content = models.TextField(null=True, blank=True)
-    parallel = models.BooleanField(default=False)
-    flesh = models.BooleanField(default=False)
-    concave = models.BooleanField(default=False)
-    publication = models.ForeignKey(Publication, on_delete=models.DO_NOTHING, null=True, blank=True)
-    links = models.JSONField(null=True, blank=True) -->
-
         {% for side in papyrus.sides.all %}
 
             <table class="table table-sm side-table" id="side_table_{{ side.pk }}">
                 <tbody>
+                    <tr>
+                        <th scope="row">Publication</th>
+                        <td>{{ side.publication }}</td>
+                    </tr>
                     <tr>
                         <th scope="row">Language</th>
                         <td>{{ side.language.name }}</td>
@@ -115,12 +115,69 @@
                     </tr>
                     <tr>
                         <th scope="row">Year</th>
-                        <td>{{ side.year }}</td> 
+                        {% if side.year is None %}
+                            {% if side.year_start and side.year_end %}
+                                <td>{{ side.year_start|ce_year }} - {{ side.year_end|ce_year }}</td>
+                            {% else %}
+                                <td>Not specified</td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{ side.year|ce_year }}</td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <th scope="row">Specific date</th>
+                        <td>{{ side.specific_date }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Content</th>
                         <td>{{ side.content }}</td>
-                    </tr>                
+                    </tr>
+                    <tr>
+                        <th scope="row">Details</th>
+                        <td>
+                            {# Parallel/perpendicular to the fibers #}
+                            {% if side.parallel %}
+                                Parallel to the fibers,
+                            {% else %}
+                                Perpendicular to the fibers,
+                            {% endif %}
+                            {# Flesh vs hair #}
+                            {% if side.flesh %}
+                                flesh,
+                            {% else %}
+                                hair,
+                            {% endif %}
+                            {# Concave vs convex #}
+                            {% if side.concave %}
+                                concave
+                            {% else %}
+                                convex
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">References</th>
+                        <td>
+                            {% if side.reference %}
+                                {{ side.reference }}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Links</th>
+                        <td>
+                            {% if side.papyrus.links.all %}
+                                {% for link in side.papyrus.links.all %}
+                                    <a href="{{ link.url }}" target="_blank">{{ link.description }}</a><br>
+                                {% endfor %}
+                            {% else %}
+                                None
+                            {% endif %}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
