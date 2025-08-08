@@ -82,7 +82,7 @@
         
         <div id="side_button_area">
         {% for side in papyrus.sides.all %}
-            <button class="btn btn-link" id="side_{{side.pk}}">{{ side.title }}</button>
+            <button class="btn btn-link" id="side_{{side.pk}}">{{ side.publication }}</button>
         {% endfor %}
         </div>
 

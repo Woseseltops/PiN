@@ -121,6 +121,7 @@
             <thead>
                 <tr class="header">
                     <th>Inventory nr</th>
+                    <th>Publication</th>
                     <th>Content</th>
                     <th>Year</th>
                     <th>Provenance</th>
@@ -131,7 +132,8 @@
                 {% for side in papyrus_sides %}
                 <tr year="{{ side.year }}" year-start="{{ side.year_start }}" year-end="{{ side.year_end }}">
                     <td><a href="/papyrus/{{ side.papyrus.pk }}">{{ side.papyrus.inventory_number }}</a></td>
-                    <td>{{ side.content|slice:":25" }}{% if side.content|length > 25 %}...{% endif %}</td>
+                    <td>{{ side.publication }}</td>
+                    <td>{{ side.content }}{% if side.content|length > 25 %}...{% endif %}</td>
                     <td>
                         {% if side.year != None %}
                             {{ side.year|ce_year }}

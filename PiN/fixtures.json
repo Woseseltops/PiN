@@ -40,91 +40,91 @@
     "current_location": "Cairo Museum"
   }},
   { "model": "papyrus.papyrusside", "pk": 1, "fields": {
-    "papyrus": 1, "title": "Prayer Fragment", "language": 1, "genre": 1,
+    "papyrus": 1, "publication": "Prayer Fragment", "language": 1, "genre": 1,
     "date": "0300-01-01", "date_start": null, "date_end": null,
     "content": "A fragment of a Greek prayer.", "parallel": false,
     "flesh": true, "concave": false, "reference": 1, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 2, "fields": {
-    "papyrus": 1, "title": "Administrative Record", "language": 1, "genre": 2,
+    "papyrus": 1, "publication": "Administrative Record", "language": 1, "genre": 2,
     "date": "0285-05-10", "date_start": null, "date_end": null,
     "content": "A tax record from Oxyrhynchus.", "parallel": false,
     "flesh": false, "concave": false, "reference": 1, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 3, "fields": {
-    "papyrus": 1, "title": "Magical Spell", "language": 2, "genre": 1,
+    "papyrus": 1, "publication": "Magical Spell", "language": 2, "genre": 1,
     "date": "0400-01-01", "date_start": null, "date_end": null,
     "content": "Spell to summon protection from demons.", "parallel": true,
     "flesh": false, "concave": true, "reference": 1, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 4, "fields": {
-    "papyrus": 2, "title": "Letter to Brother", "language": 1, "genre": 3,
+    "papyrus": 2, "publication": "Letter to Brother", "language": 1, "genre": 3,
     "date": "0350-03-22", "date_start": null, "date_end": null,
     "content": "A personal letter between siblings.", "parallel": false,
     "flesh": true, "concave": false, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 5, "fields": {
-    "papyrus": 2, "title": "School Exercise", "language": 1, "genre": 3,
+    "papyrus": 2, "publication": "School Exercise", "language": 1, "genre": 3,
     "date": "0300-09-14", "date_start": null, "date_end": null,
     "content": "Practice text for Greek students.", "parallel": false,
     "flesh": false, "concave": false, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 6, "fields": {
-    "papyrus": 2, "title": "Legal Petition", "language": 2, "genre": 2,
+    "papyrus": 2, "publication": "Legal Petition", "language": 2, "genre": 2,
     "date": "0460-12-01", "date_start": null, "date_end": null,
     "content": "Petition to local governor regarding land dispute.", "parallel": true,
     "flesh": false, "concave": true, "reference": 2, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 7, "fields": {
-    "papyrus": 3, "title": "Religious Hymn", "language": 1, "genre": 1,
+    "papyrus": 3, "publication": "Religious Hymn", "language": 1, "genre": 1,
     "date": "0310-02-17", "date_start": null, "date_end": null,
     "content": "Early Christian hymn.", "parallel": false,
     "flesh": false, "concave": false, "reference": 2, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 8, "fields": {
-    "papyrus": 3, "title": "Horoscope", "language": 2, "genre": 1,
+    "papyrus": 3, "publication": "Horoscope", "language": 2, "genre": 1,
     "date": "0380-04-03", "date_start": null, "date_end": null,
     "content": "Prediction of child's future based on birthdate.", "parallel": false,
     "flesh": true, "concave": false, "reference": 2, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 9, "fields": {
-    "papyrus": 3, "title": "Trade Agreement", "language": 2, "genre": 2,
+    "papyrus": 3, "publication": "Trade Agreement", "language": 2, "genre": 2,
     "date": "0420-11-09", "date_start": null, "date_end": null,
     "content": "Terms of trade between two merchants.", "parallel": false,
     "flesh": false, "concave": false, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 10, "fields": {
-    "papyrus": 1, "title": "Inventory List", "language": 1, "genre": 2,
+    "papyrus": 1, "publication": "Inventory List", "language": 1, "genre": 2,
     "date": "0290-08-01", "date_start": null, "date_end": null,
     "content": "List of stored grains.", "parallel": false,
     "flesh": false, "concave": true, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 11, "fields": {
-    "papyrus": 1, "title": "Marriage Contract", "language": 1, "genre": 2,
+    "papyrus": 1, "publication": "Marriage Contract", "language": 1, "genre": 2,
     "date": "0260-07-20", "date_start": null, "date_end": null,
     "content": "Contract outlining terms of marriage.", "parallel": false,
     "flesh": false, "concave": false, "reference": 1, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 12, "fields": {
-    "papyrus": 2, "title": "Land Survey", "language": 1, "genre": 2,
+    "papyrus": 2, "publication": "Land Survey", "language": 1, "genre": 2,
     "date": "0375-06-15", "date_start": null, "date_end": null,
     "content": "Measurement of field boundaries.", "parallel": true,
     "flesh": true, "concave": true, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 13, "fields": {
-    "papyrus": 3, "title": "Poem Fragment", "language": 1, "genre": 3,
+    "papyrus": 3, "publication": "Poem Fragment", "language": 1, "genre": 3,
     "date": "0410-05-23", "date_start": null, "date_end": null,
     "content": "Part of a lost epic.", "parallel": false,
     "flesh": true, "concave": false, "reference": 2, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 14, "fields": {
-    "papyrus": 3, "title": "Divination Text", "language": 2, "genre": 1,
+    "papyrus": 3, "publication": "Divination Text", "language": 2, "genre": 1,
     "date": "0430-03-30", "date_start": null, "date_end": null,
     "content": "Divination methods using animal entrails.", "parallel": false,
     "flesh": false, "concave": false, "reference": null, "links": null
   }},
   { "model": "papyrus.papyrusside", "pk": 15, "fields": {
-    "papyrus": 1, "title": "Receipt of Sale", "language": 1, "genre": 2,
+    "papyrus": 1, "publication": "Receipt of Sale", "language": 1, "genre": 2,
     "date": "0275-10-11", "date_start": null, "date_end": null,
     "content": "Receipt for selling wheat.", "parallel": false,
     "flesh": false, "concave": true, "reference": null, "links": null

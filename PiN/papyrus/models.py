@@ -79,7 +79,7 @@ class Link(models.Model):
 
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
+    publication = models.CharField(max_length=255)
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
     genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
     year = models.IntegerField(null=True, blank=True)
@@ -94,7 +94,7 @@ class PapyrusSide(models.Model):
     links = models.JSONField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.papyrus.inventory_number} - {self.title} - {self.language}'
+        return f'{self.papyrus.inventory_number} - {self.publication} - {self.language}'
 
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
