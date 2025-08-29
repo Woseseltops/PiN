@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from papyrus.views import PapyrusSideListView, PapyrusDetailView
 
 urlpatterns = [
@@ -23,3 +25,7 @@ urlpatterns = [
     path('papyrus-sides/', PapyrusSideListView.as_view(), name='papyrus_side_list'),
     path('papyrus/<int:pk>/', PapyrusDetailView.as_view(), name='papyrus_detail'),
 ]
+
+# Serve images from papyrus_images during development
+if settings.DEBUG:
+    urlpatterns += static('/papyrus_images/', document_root=settings.BASE_DIR / 'papyrus_images')

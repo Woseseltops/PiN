@@ -14,38 +14,152 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <style>
-    .fw-bold
-    {
+    .fw-bold {
         font-weight: bold;
+    }
+
+    /* Flip animation using rotateY */
+    @keyframes flip-horizontal 
+    {
+        0% 
+        {
+            transform: rotateY(0deg);
+        }
+
+        50% 
+        {
+            transform: rotateY(90deg);
+        }
+
+        51% 
+        {
+            transform: rotateY(-85deg);
+        }
+
+        100% 
+        {
+            transform: rotateY(0deg);
+        }
+    }
+
+    .image-container
+    {
+        perspective: 800px;
+    }
+
+    .flip-horizontal 
+    {
+        animation: flip-horizontal 1s;
+    	transform-style: preserve-3d;
+        backface-visibility: visible;
     }
     </style>
 
     <script>
 
-    function showSide(index) 
-    {
-        // Hide all side tables
-        $('table.side-table').hide();
-        // Show the selected side table
-        $('#side_table_' + index).show();
+        var sides = {
+            {% for side in papyrus.sides.all %}
+                "{{ side.pk }}": {
+                    "publication": "{{ side.publication|escapejs }}",
+                    "language": "{{ side.language.name|escapejs }}",
+                    "genre": "{{ side.genre.name|escapejs }}",
+                    "year": "{% if side.year %}{{ side.year|ce_year|escapejs }}{% elif side.year_start and side.year_end %}{{ side.year_start|ce_year|escapejs }} - {{ side.year_end|ce_year|escapejs }}{% else %}Not specified{% endif %}",
+                    "specific_date": "{{ side.specific_date|escapejs }}",
+                    "content": "{{ side.content|escapejs }}",
+                    "details": "{% if side.parallel %}Parallel to the fibers,{% else %}Perpendicular to the fibers,{% endif %} {% if side.flesh %}flesh,{% else %}hair,{% endif %} {% if side.concave %}concave{% else %}convex{% endif %}",
+                    "reference": "{% if side.reference %}{{ side.reference|escapejs }}{% else %}None{% endif %}",
+                    "links": [
+                        {% for link in side.papyrus.links.all %}
+                            {"url": "{{ link.url|escapejs }}", "description": "{{ link.description|escapejs }}"}{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ],
+                    "images": [
+                        {% for image in side.images.all %}
+                            "{{ image.image.url }}"{% if not forloop.last %},{% endif %}
+                        {% endfor %}
+                    ]
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        };
 
-        $('button[id^="side_"]').addClass('btn-link');
-        $('button[id^="side_"]').removeClass('fw-bold');
+        var currentImage = 1;
 
-        $('#side_' + index).removeClass('btn-link');
-        $('#side_' + index).addClass('fw-bold');
-    }
+        function showSide(index) 
+        {
+            var side = sides[index];
+            if (!side) return;
+            $('#side_publication').text(side.publication);
+            $('#side_language').text(side.language);
+            $('#side_genre').text(side.genre);
+            $('#side_year').text(side.year);
+            $('#side_specific_date').text(side.specific_date);
+            $('#side_content').text(side.content);
+            $('#side_details').text(side.details);
+            $('#side_reference').text(side.reference);
 
-    $(document).ready(function() {
-        // Initially hide all side tables except the first one
-        showSide(1);
+            // Links
+            var linksHtml = '';
+            if (side.links && side.links.length > 0) {
+                side.links.forEach(function(link) {
+                    linksHtml += '<a href="' + link.url + '" target="_blank">' + link.description + '</a><br>';
+                });
+            } else {
+                linksHtml = 'None';
+            }
+            $('#side_links').html(linksHtml);
 
-        // Add click event to each button
-        $('button[id^="side_"]').click(function() {
-            var sideId = $(this).attr('id').split('_')[1];
-            showSide(sideId);
+            // Show the table if hidden
+            $('.side-table').show();
+        }
+
+        function showImage(index, animated) 
+        {
+            currentImage = index;
+
+            // Animate in new images
+            var $container = $('#side_images');
+            var side = sides[index];
+            if (!side) return;
+
+            if (animated)
+            {
+                // Animate out old images
+                $container.find('img').each(function() 
+                {
+                    $(this).removeClass('flip-horizontal');
+                    $(this).addClass('flip-horizontal');
+                });
+
+                setTimeout(function() 
+                {
+                    //Replace the src
+                    $container.find('img').each(function() {
+                        var newSrc = side.images[$(this).index()];
+                        $(this).attr('src', newSrc);
+                    });
+                }, 400); // trial and error, somewhat before halway
+
+                setTimeout(function() {
+                    $container.find('img').each(function() {
+                        $(this).removeClass('flip-horizontal');
+                    });
+                }, 1000); // end of the animation               
+            }
+         }
+
+        $(document).ready(function() {
+            // Initially hide all side tables except the first one
+            showSide(1);
+            showImage(1, false);
+
+            // Add click event to each button
+            $('button[id^="side_"]').click(function() {
+                var sideId = $(this).attr('id').split('_')[1];
+                showSide(sideId);
+                showImage(sideId, sideId != currentImage);
+            });
         });
-    });
+
     </script>
 
 </head>
@@ -97,92 +211,100 @@
         {% endfor %}
         </div>
 
-        {% for side in papyrus.sides.all %}
 
-            <table class="table table-sm side-table" id="side_table_{{ side.pk }}">
-                <tbody>
-                    <tr>
-                        <th scope="row">Publication</th>
-                        <td>{{ side.publication }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Language</th>
-                        <td>{{ side.language.name }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Genre</th>
-                        <td>{{ side.genre.name }}</td> 
-                    </tr>
-                    <tr>
-                        <th scope="row">Year</th>
-                        {% if side.year is None %}
-                            {% if side.year_start and side.year_end %}
-                                <td>{{ side.year_start|ce_year }} - {{ side.year_end|ce_year }}</td>
-                            {% else %}
-                                <td>Not specified</td>
-                            {% endif %}
-                        {% else %}
-                            <td>{{ side.year|ce_year }}</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                        <th scope="row">Specific date</th>
-                        <td>{{ side.specific_date }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Content</th>
-                        <td>{{ side.content }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Details</th>
-                        <td>
-                            {# Parallel/perpendicular to the fibers #}
-                            {% if side.parallel %}
-                                Parallel to the fibers,
-                            {% else %}
-                                Perpendicular to the fibers,
-                            {% endif %}
-                            {# Flesh vs hair #}
-                            {% if side.flesh %}
-                                flesh,
-                            {% else %}
-                                hair,
-                            {% endif %}
-                            {# Concave vs convex #}
-                            {% if side.concave %}
-                                concave
-                            {% else %}
-                                convex
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">References</th>
-                        <td>
-                            {% if side.reference %}
-                                {{ side.reference }}
-                            {% else %}
-                                None
-                            {% endif %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Links</th>
-                        <td>
-                            {% if side.papyrus.links.all %}
-                                {% for link in side.papyrus.links.all %}
-                                    <a href="{{ link.url }}" target="_blank">{{ link.description }}</a><br>
-                                {% endfor %}
-                            {% else %}
-                                None
-                            {% endif %}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="row">
+            {% with side=papyrus.sides.first %}
+            <div class="col-md-8">
+                <table class="table table-sm side-table" style="display:none;">
+                    <tbody>
+                        <tr>
+                            <th scope="row">Publication</th>
+                            <td id="side_publication">{{ side.publication }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Language</th>
+                            <td id="side_language">{{ side.language.name }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Genre</th>
+                            <td id="side_genre">{{ side.genre.name }}</td> 
+                        </tr>
+                        <tr>
+                            <th scope="row">Year</th>
+                            <td id="side_year">
+                                {% if side.year is None %}
+                                    {% if side.year_start and side.year_end %}
+                                        {{ side.year_start|ce_year }} - {{ side.year_end|ce_year }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                {% else %}
+                                    {{ side.year|ce_year }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Specific date</th>
+                            <td id="side_specific_date">{{ side.specific_date }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Content</th>
+                            <td id="side_content">{{ side.content }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Details</th>
+                            <td id="side_details">
+                                {% if side.parallel %}
+                                    Parallel to the fibers,
+                                {% else %}
+                                    Perpendicular to the fibers,
+                                {% endif %}
+                                {% if side.flesh %}
+                                    flesh,
+                                {% else %}
+                                    hair,
+                                {% endif %}
+                                {% if side.concave %}
+                                    concave
+                                {% else %}
+                                    convex
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">References</th>
+                            <td id="side_reference">
+                                {% if side.reference %}
+                                    {{ side.reference }}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Links</th>
+                            <td id="side_links">
+                                {% if side.papyrus.links.all %}
+                                    {% for link in side.papyrus.links.all %}
+                                        <a href="{{ link.url }}" target="_blank">{{ link.description }}</a><br>
+                                    {% endfor %}
+                                {% else %}
+                                    None
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            {% endwith %}
 
-        {% endfor %}
+            <div class="col-md-4 image-container" id="side_images">
+            {% for image in papyrus.sides.first.images.all %}
+                <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" />
+            {% endfor %}
+        </div>
 
+        </div>
     </main>
 </body>
 </html>
