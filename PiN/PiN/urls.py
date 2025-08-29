@@ -26,6 +26,6 @@ urlpatterns = [
     path('papyrus/<int:pk>/', PapyrusDetailView.as_view(), name='papyrus_detail'),
 ]
 
-# Serve images from papyrus_images during development
+# Serve uploaded media files during development
 if settings.DEBUG:
-    urlpatterns += static('/papyrus_images/', document_root=settings.BASE_DIR / 'papyrus_images')
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
