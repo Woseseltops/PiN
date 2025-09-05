@@ -18,12 +18,15 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from papyrus.views import PapyrusSideListView, PapyrusDetailView
+from papyrus.views import PapyrusSideListView, PapyrusDetailView, page_view, home_page_view
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home_page_view, name='home'),
     path('papyrus-sides/', PapyrusSideListView.as_view(), name='papyrus_side_list'),
     path('papyrus/<int:pk>/', PapyrusDetailView.as_view(), name='papyrus_detail'),
+    path('<str:page_name>/', page_view, name='page'),
 ]
 
 # Serve uploaded media files during development
