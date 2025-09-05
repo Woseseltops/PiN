@@ -303,7 +303,9 @@
 
             <div class="col-md-4 image-container" id="side_images">
             {% for image in papyrus.sides.first.images.all %}
-                <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" title="{{ image.credit|default:'' }}" />
+                <a href="{{ image.image.url }}" target="_blank">
+                    <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" title="{{ image.credit|default:'' }}" />
+                </a>
             {% endfor %}
         </div>
 
