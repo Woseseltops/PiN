@@ -75,7 +75,7 @@
                     ],
                     "images": [
                         {% for image in side.images.all %}
-                            "{{ image.image.url }}"{% if not forloop.last %},{% endif %}
+                            {"url": "{{ image.image.url }}", "credit": "{{ image.credit|escapejs|default:'' }}"}{% if not forloop.last %},{% endif %}
                         {% endfor %}
                     ]
                 }{% if not forloop.last %},{% endif %}
@@ -134,8 +134,11 @@
                 {
                     //Replace the src
                     $container.find('img').each(function() {
-                        var newSrc = side.images[$(this).index()];
+                        var idx = $(this).index();
+                        var newSrc = side.images[idx].url;
+                        var newCredit = (side.images && side.images[idx]) ? side.images[idx].credit : '';
                         $(this).attr('src', newSrc);
+                        $(this).attr('title', newCredit);
                     });
                 }, 400); // trial and error, somewhat before halway
 
@@ -300,7 +303,7 @@
 
             <div class="col-md-4 image-container" id="side_images">
             {% for image in papyrus.sides.first.images.all %}
-                <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" />
+                <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" title="{{ image.credit|default:'' }}" />
             {% endfor %}
         </div>
 
