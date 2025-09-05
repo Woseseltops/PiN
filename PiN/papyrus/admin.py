@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django import forms
-from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation
+from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation, Page
+@admin.register(Page)
+class PageAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Page._meta.fields]
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):

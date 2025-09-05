@@ -1,0 +1,19 @@
+{% load static %}
+<nav class="navbar navbar-expand-md mb-4 border">
+    <div class="container">
+        <a href="https://www.ru.nl" class="d-none d-sm-block">
+            <img src="https://cls.ru.nl/RU_logo.svg" class="navbar-brand" style="height: 3rem"/>
+        </a>
+        <ul class="navbar-nav ms-auto">
+            {% for page in menu_pages %}
+                <li class="nav-item">
+                    {% if page.is_home %}
+                        <a class="nav-link" href="/">{{ page.title_en }}</a>
+                    {% else %}
+                        <a class="nav-link" href="/{{ page.name }}">{{ page.title_en }}</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
