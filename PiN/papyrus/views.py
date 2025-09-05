@@ -33,7 +33,8 @@ def page_view(request, page_name):
     except Page.DoesNotExist:
         raise Http404("Page not found")
     menu_pages = Page.objects.order_by('menu_bar_order')
-    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages})
+    lang = request.GET.get('lang', 'en')
+    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'lang': lang})
 
 def home_page_view(request):
     from .models import Page
@@ -42,4 +43,5 @@ def home_page_view(request):
     except Page.DoesNotExist:
         raise Http404("Home page not found")
     menu_pages = Page.objects.order_by('menu_bar_order')
-    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages})
+    lang = request.GET.get('lang', 'en')
+    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'lang': lang})

@@ -5,20 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.name }} | Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.3.2/css/flag-icons.min.css"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap_ru.css' %}">
+
+    <style>
+        .flag-icon
+        {
+            text-decoration: none;
+        }
+
+        .fi.fis
+        {
+            width: 20px;
+            height: 20px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
     {% include 'papyrus/menu_bar.html' %}
     <main class="container mb5">
         <div class="row">
             <div class="col-md-8">
-                <h1>{{ page.title_en }}</h1>
+                <h1>
+                    {% if lang == 'nl' %}
+                        {{ page.title_nl }}
+                    {% else %}
+                        {{ page.title_en }}
+                    {% endif %}
+                </h1>
                 <hr>
                 <div>
-                    {{ page.content_en|linebreaks }}
+                    {% if lang == 'nl' %}
+                        {{ page.content_nl|linebreaks }}
+                    {% else %}
+                        {{ page.content_en|linebreaks }}
+                    {% endif %}
                 </div>
             </div>
         </div>
+        <div class="mb-3">
+                <a class="flag-icon" href="?lang=en">
+                    <span class="fi fi-gb fis flag-icon" title="English"></span>
+                </a>
+                <a class="flag-icon" href="?lang=nl">
+                    <span class="fi fi-nl fis flag-icon" title="Nederlands"></span>
+                </a>
+        </div>
     </main>
+
 </body>
 </html>

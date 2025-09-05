@@ -8,9 +8,13 @@
             {% for page in menu_pages %}
                 <li class="nav-item">
                     {% if page.is_home %}
-                        <a class="nav-link" href="/">{{ page.title_en }}</a>
+                        <a class="nav-link" href="/?lang={{ lang|default:'en' }}">
+                            {% if lang == 'nl' %}{{ page.title_nl }}{% else %}{{ page.title_en }}{% endif %}
+                        </a>
                     {% else %}
-                        <a class="nav-link" href="/{{ page.name }}">{{ page.title_en }}</a>
+                        <a class="nav-link" href="/{{ page.name }}?lang={{ lang|default:'en' }}">
+                            {% if lang == 'nl' %}{{ page.title_nl }}{% else %}{{ page.title_en }}{% endif %}
+                        </a>
                     {% endif %}
                 </li>
             {% endfor %}
