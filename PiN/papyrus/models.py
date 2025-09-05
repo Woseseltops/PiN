@@ -97,5 +97,5 @@ class PapyrusSide(models.Model):
 
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='papyrus_images/')
+    image = models.ImageField(upload_to='')
     credit = models.CharField(max_length=255, null=True, blank=True)
