@@ -1,8 +1,15 @@
 {% load static %}
 <nav class="navbar navbar-expand-md mb-4 border">
     <div class="container">
-        <a href="https://www.ru.nl" class="d-none d-sm-block">
-            <img src="https://cls.ru.nl/RU_logo.svg" class="navbar-brand" style="height: 3rem"/>
+        <div class="logo-container" >
+            <a href="/" class="d-none d-sm-block align-items-center" style="float:left;">
+                <img src="{% static 'png/PiN-logo.svg' %}" class="navbar-brand" style="height: 5rem"/>
+            </a>
+            <div class="logo-text" style="float:left; margin-left: -65px;">
+                <h1>PiN</h1>
+                <small style="color: hsl(0deg 0% 0% / 46%); top: -15px; position: relative;">Papyrologie in Nederland</small>
+            </div>
+        </div>
         </a>
         <ul class="navbar-nav ms-auto">
             {% for page in menu_pages %}
