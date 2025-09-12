@@ -99,3 +99,20 @@ class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='')
     credit = models.CharField(max_length=255, null=True, blank=True)
+
+class Page(models.Model):
+    name = models.CharField(max_length=100, null=True, blank=True)
+
+    title_en = models.CharField(max_length=255)
+    title_nl = models.CharField(max_length=255)
+
+    content_en = models.TextField()
+    content_nl = models.TextField()
+
+
+    menu_bar_order = models.IntegerField(default=0)
+    is_list_view = models.BooleanField(default=False)
+    is_home = models.BooleanField(default=False, help_text="Set this page as the home page.")
+
+    def __str__(self):
+        return self.title_en
