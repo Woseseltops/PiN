@@ -27,7 +27,6 @@ class PapyrusDetailView(ListView):
         return Papyrus.objects.filter(id=self.kwargs['pk'])[0]
 
 def page_view(request, page_name):
-    from .models import Page
     try:
         page = Page.objects.get(name=page_name)
     except Page.DoesNotExist:
@@ -37,7 +36,6 @@ def page_view(request, page_name):
     return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'lang': lang})
 
 def home_page_view(request):
-    from .models import Page
     try:
         page = Page.objects.get(is_home=True)
     except Page.DoesNotExist:
