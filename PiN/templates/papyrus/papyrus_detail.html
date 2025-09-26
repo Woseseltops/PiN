@@ -66,7 +66,7 @@
                     "year": "{% if side.year %}{{ side.year|ce_year|escapejs }}{% elif side.year_start and side.year_end %}{{ side.year_start|ce_year|escapejs }} - {{ side.year_end|ce_year|escapejs }}{% else %}Not specified{% endif %}",
                     "specific_date": "{{ side.specific_date|escapejs }}",
                     "content": "{{ side.content|escapejs }}",
-                    "details": "{% if side.parallel %}Parallel to the fibers,{% else %}Perpendicular to the fibers,{% endif %} {% if side.flesh %}flesh,{% else %}hair,{% endif %} {% if side.concave %}concave{% else %}convex{% endif %}",
+                    "details": "{% if papyrus.material.name == 'Papyrus' %}{% if side.parallel %}Horizontal fibres{% else %}Vertical fibres{% endif %}{% elif papyrus.material.name == 'Parchment' %}{% if side.flesh %}Flesh{% else %}Hair{% endif %}{% else %}{% if side.concave %}Concave{% else %}Convex{% endif %}{% endif %}{% if side.transversa_charta %}, transversa charta{% endif %}",
                     "reference": "{% if side.reference %}{{ side.reference|escapejs }}{% else %}None{% endif %}",
                     "links": [
                         {% for link in side.papyrus.links.all %}
@@ -247,23 +247,8 @@
                             <td id="side_content">{{ side.content }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Details</th>
+                            <th scope="row">Side</th>
                             <td id="side_details">
-                                {% if side.parallel %}
-                                    Parallel to the fibers,
-                                {% else %}
-                                    Perpendicular to the fibers,
-                                {% endif %}
-                                {% if side.flesh %}
-                                    flesh,
-                                {% else %}
-                                    hair,
-                                {% endif %}
-                                {% if side.concave %}
-                                    concave
-                                {% else %}
-                                    convex
-                                {% endif %}
                             </td>
                         </tr>
                         <tr>

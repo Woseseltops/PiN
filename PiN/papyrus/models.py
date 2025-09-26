@@ -90,6 +90,7 @@ class PapyrusSide(models.Model):
     parallel = models.BooleanField(default=False)
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)
+    transversa_charta = models.BooleanField(default=False, verbose_name='Transversa charta')
     reference = models.ForeignKey(Reference, on_delete=models.DO_NOTHING, null=True, blank=True)
 
     def __str__(self):
