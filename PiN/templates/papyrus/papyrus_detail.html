@@ -217,6 +217,10 @@
                             <td id="side_publication">{{ side.publication }}</td>
                         </tr>
                         <tr>
+                            <th scope="row">Editor</th>
+                            <td>{% if side.editor %}{{ side.editor.name }}{% endif %}</td>
+                        </tr>
+                        <tr>
                             <th scope="row">Language</th>
                             <td id="side_language">{{ side.language.name }}</td>
                         </tr>

@@ -18,6 +18,12 @@ class Language(models.Model):
     def __str__(self):
         return self.name
 
+class Editor(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
 class Genre(models.Model):
     name = models.CharField(max_length=100)
 
@@ -80,6 +86,8 @@ class Link(models.Model):
 class PapyrusSide(models.Model):
     papyrus = models.ForeignKey(Papyrus, related_name='sides', on_delete=models.CASCADE)
     publication = models.CharField(max_length=255)
+    editor = models.ForeignKey('Editor', on_delete=models.DO_NOTHING, null=True, blank=True)
+    published = models.BooleanField(default=True, help_text='Visible in list view')
     language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
     genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
     year = models.IntegerField(null=True, blank=True)

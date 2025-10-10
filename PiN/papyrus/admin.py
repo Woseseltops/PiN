@@ -1,6 +1,12 @@
+from .models import Editor
 from django.contrib import admin
 from django import forms
 from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation, Page
+
+@admin.register(Editor)
+class EditorAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Page._meta.fields]
@@ -45,7 +51,7 @@ class LinkInline(admin.TabularInline):
 class PapyrusSideForm(forms.ModelForm):
     class Meta:
         model = PapyrusSide
-        fields = '__all__'
+        exclude = []
         labels = {
             'parallel': 'Parallel to the fibres',
         }
@@ -55,6 +61,7 @@ class PapyrusSideInline(admin.StackedInline):
     form = PapyrusSideForm
     extra = 1  # Number of empty forms to display
     autocomplete_fields = ['language', 'genre', 'reference']
+    exclude = []
 
 @admin.register(Papyrus)
 class PapyrusAdmin(admin.ModelAdmin):

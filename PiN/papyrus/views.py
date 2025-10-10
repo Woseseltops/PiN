@@ -8,6 +8,9 @@ class PapyrusSideListView(ListView):
     template_name = 'papyrus/papyrus_side_list.html'
     context_object_name = 'papyrus_sides'
 
+    def get_queryset(self):
+        return PapyrusSide.objects.filter(published=True)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu_pages'] = Page.objects.order_by('menu_bar_order')
