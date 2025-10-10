@@ -125,7 +125,7 @@
             <tbody>
                 {% for side in papyrus_sides %}
                 <tr year="{{ side.year }}" year-start="{{ side.year_start }}" year-end="{{ side.year_end }}">
-                    <td><a href="/papyrus/{{ side.papyrus.pk }}">{{ side.papyrus.inventory_number }}</a></td>
+                    <td><a href="/papyrus/{{ side.papyrus.pk }}?side={{ side.pk }}">{{ side.papyrus.inventory_number }}</a></td>
                     <td>{{ side.publication }}</td>
                     <td>{{ side.content }}{% if side.content|length > 25 %}...{% endif %}</td>
                     <td>

@@ -24,6 +24,11 @@ class PapyrusDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu_pages'] = Page.objects.order_by('menu_bar_order')
+        try:
+            side_index = int(self.request.GET.get('side', 0))
+        except (TypeError, ValueError):
+            side_index = 0
+        context['side_index'] = side_index
         return context
 
     def get_queryset(self):

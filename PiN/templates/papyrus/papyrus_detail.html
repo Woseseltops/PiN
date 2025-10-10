@@ -86,6 +86,8 @@
 
         function showSide(index) 
         {
+            console.log("Showing side: " + index);
+
             var side = sides[index];
             if (!side) return;
             $('#side_publication').text(side.publication);
@@ -148,9 +150,10 @@
             }
          }
 
-        $(document).ready(function() {
+        $(document).ready(function() 
+        {
             // Initially hide all side tables except the first one
-            showSide(1);
+            showSide({{side_index }});
             showImage(1, false);
 
             // Add click event to each button
