@@ -123,10 +123,14 @@
             var side = sides[index];
             if (!side) return;
 
+            var $img = $('#side_image img');
+            var imageData = side.images[0];
+            var imageUrl = imageData ? imageData.url : '';
+            var imageCredit = imageData ? imageData.credit : '';
+
             if (animated)
             {
                 // Animate out old image
-                var $img = $('#side_image img');
                 $img.removeClass('flip-horizontal');
                 $img.addClass('flip-horizontal');
 
@@ -136,9 +140,6 @@
                 setTimeout(function() 
                 {
                     //Replace the src and credit for the single image
-                    var imageData = side.images[0];
-                    var imageUrl = imageData ? imageData.url : '';
-                    var imageCredit = imageData ? imageData.credit : '';
                     $img.attr('src', imageUrl);
                     $img.attr('title', imageCredit);
                     $('#side_image').attr('href', imageUrl);
@@ -147,6 +148,12 @@
                 setTimeout(function() {
                     $img.removeClass('flip-horizontal');
                 }, duration);               
+            }
+            else
+            {
+                $img.attr('src', imageUrl);
+                $img.attr('title', imageCredit);
+                $('#side_image').attr('href', imageUrl);
             }
          }
 
