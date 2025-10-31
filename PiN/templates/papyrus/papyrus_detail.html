@@ -227,8 +227,14 @@
                             <td id="side_publication">{{ side.publication }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Editor</th>
-                            <td>{% if side.editor %}{{ side.editor.name }}{% endif %}</td>
+                            <th scope="row">Editor(s)</th>
+                            <td>
+                                {% for editor in side.editors.all %}
+                                    {{ editor.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    None
+                                {% endfor %}
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">Language</th>

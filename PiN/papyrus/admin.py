@@ -54,6 +54,7 @@ class PapyrusSideForm(forms.ModelForm):
         exclude = []
         labels = {
             'parallel': 'Parallel to the fibres',
+            'editors': 'Editor(s)',
         }
 
 class PapyrusSideInline(admin.StackedInline):
