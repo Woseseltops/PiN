@@ -64,10 +64,38 @@ class PapyrusSideInline(admin.StackedInline):
     autocomplete_fields = ['language', 'genre', 'reference']
     exclude = []
 
+
+# Custom filter for published status
+class PublishedListFilter(admin.SimpleListFilter):
+    title = 'Published'
+    parameter_name = 'published'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('yes', 'Yes'),
+            ('no', 'No'),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value == 'yes':
+            return queryset.filter(sides__published=True).distinct()
+        if value == 'no':
+            return queryset.exclude(sides__published=True).distinct()
+        return queryset
+
 @admin.register(Papyrus)
 class PapyrusAdmin(admin.ModelAdmin):
     autocomplete_fields = ['material', 'shape', 'finding_location', 'current_location']
     inlines = [DimensionInline, PapyrusSideInline, LinkInline]
+    list_display = ('inventory_number', 'current_location', 'published_column', 'material', 'shape')
+    list_filter = ('current_location', 'material', 'shape', PublishedListFilter)
+
+    def published_column(self, obj):
+        return any(side.published for side in obj.sides.all())
+        
+    published_column.boolean = True
+    published_column.short_description = 'Published'
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
