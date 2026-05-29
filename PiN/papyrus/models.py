@@ -62,6 +62,8 @@ class Papyrus(models.Model):
 
     finding_location = models.ForeignKey(FindingLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
     current_location = models.ForeignKey(CurrentLocation, on_delete=models.DO_NOTHING, null=True, blank=True)
+    provenance_short_description = models.CharField(max_length=255, null=True, blank=True)
+    provenance_url = models.URLField(null=True, blank=True)
 
 
     class Meta:
@@ -99,7 +101,7 @@ class PapyrusSide(models.Model):
     flesh = models.BooleanField(default=False)
     concave = models.BooleanField(default=False)
     transversa_charta = models.BooleanField(default=False, verbose_name='Transversa charta')
-    reference = models.ForeignKey(Reference, on_delete=models.DO_NOTHING, null=True, blank=True)
+    references = models.ManyToManyField(Reference, blank=True)
 
     def __str__(self):
         return f'{self.papyrus.inventory_number} - {self.publication} - {self.language}'

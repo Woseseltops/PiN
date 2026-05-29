@@ -67,7 +67,7 @@
                     "specific_date": "{{ side.specific_date|escapejs }}",
                     "content": "{{ side.content|escapejs }}",
                     "details": "{% if papyrus.material.name == 'Papyrus' %}{% if side.parallel %}Horizontal fibres{% else %}Vertical fibres{% endif %}{% elif papyrus.material.name == 'Parchment' %}{% if side.flesh %}Flesh{% else %}Hair{% endif %}{% else %}{% if side.concave %}Concave{% else %}Convex{% endif %}{% endif %}{% if side.transversa_charta %}, transversa charta{% endif %}",
-                    "reference": "{% if side.reference %}{{ side.reference|escapejs }}{% else %}None{% endif %}",
+                    "references": [{% for reference in side.references.all %}"{{ reference|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
                     "links": [
                         {% for link in side.papyrus.links.all %}
                             {"url": "{{ link.url|escapejs }}", "description": "{{ link.description|escapejs }}"}{% if not forloop.last %},{% endif %}
@@ -97,7 +97,7 @@
             $('#side_specific_date').text(side.specific_date);
             $('#side_content').text(side.content);
             $('#side_details').text(side.details);
-            $('#side_reference').text(side.reference);
+            $('#side_reference').html(side.references && side.references.length > 0 ? side.references.join('<br>') : 'None');
 
             // Links
             var linksHtml = '';
@@ -186,6 +186,8 @@
                     <th scope="col">Material</th>
                     <th scope="col">Shape</th>
                     <th scope="col">Finding Location</th>
+                    <th scope="col">Provenance</th>
+                    <th scope="col">Provenance URL</th>
                     <th scope="col">Current Location</th>
                     <th scope="col">Dimensions</th>
                 </tr>
@@ -196,6 +198,14 @@
                     <td>{{ papyrus.material.name }}</td>
                     <td>{{ papyrus.shape.name }}</td>
                     <td>{{ papyrus.finding_location }}</td>
+                    <td>{{ papyrus.provenance_short_description|default:"Not specified" }}</td>
+                    <td>
+                        {% if papyrus.provenance_url %}
+                            <a href="{{ papyrus.provenance_url }}" target="_blank">{{ papyrus.provenance_url }}</a>
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </td>
                     <td>{{ papyrus.current_location }}</td>
                     <td>
                         {% if papyrus.dimensions %}
@@ -230,7 +240,7 @@
                             <th scope="row">Editor(s)</th>
                             <td>
                                 {% for editor in side.editors.all %}
-                                    {{ editor.name }}{% if not forloop.last %}, {% endif %}
+                                    {{ editor.name }}{% if not forloop.last %}<br>{% endif %}
                                 {% empty %}
                                     None
                                 {% endfor %}
@@ -274,11 +284,11 @@
                         <tr>
                             <th scope="row">References</th>
                             <td id="side_reference">
-                                {% if side.reference %}
-                                    {{ side.reference }}
-                                {% else %}
+                                {% for reference in side.references.all %}
+                                    {{ reference }}{% if not forloop.last %}<br>{% endif %}
+                                {% empty %}
                                     None
-                                {% endif %}
+                                {% endfor %}
                             </td>
                         </tr>
                         <tr>

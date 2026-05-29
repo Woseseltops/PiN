@@ -13,14 +13,32 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
+    <style>
+        table th {
+            cursor: pointer;
+            user-select: none;
+            font-weight: bold;
+        }
+        table th:hover {
+            background-color: #f5f5f5;
+        }
+        table td:nth-child(4) {
+            font-size: 0.85rem;
+        }
+    </style>
+
     <script>
     let minYear = 0;
     let maxYear = 500;
     let keywords = "";
+    let sortColumn = 4; // Default sort by Year (column index)
+    let sortAscending = true;
 
     function updateList()
     {
         let search = $("#search").val().toLowerCase();
+        let visibleRows = [];
+        
         $("tr").each(function()
         {
             if ($(this).hasClass("header"))
@@ -28,7 +46,7 @@
                 return;
             }
 
-            let title = $(this).find("td:nth-child(2)").text().toLowerCase();
+            let rowText = $(this).text().toLowerCase();
             let year = parseInt($(this).attr("year"));
 
             let yearMatch = false;
@@ -47,13 +65,66 @@
                 yearMatch = (year >= minYear && year <= maxYear);
             }
 
-            if (title.includes(search) && yearMatch)
+            if (rowText.includes(search) && yearMatch)
             {
+                visibleRows.push($(this));
                 $(this).show();
             }
             else
             {
                 $(this).hide();
+            }
+        });
+
+        // Sort visible rows
+        sortRows(visibleRows);
+    }
+
+    function getSortValue(row, column)
+    {
+        if (column === 4) {
+            // Year - use numeric sort
+            let year = parseInt($(row).attr("year"));
+            if (isNaN(year)) year = parseInt($(row).attr("year-start"));
+            return year || 0;
+        } else {
+            // All other columns - get text from td
+            return $(row).find("td").eq(column).text().toLowerCase();
+        }
+    }
+
+    function sortRows(rows)
+    {
+        rows.sort(function(a, b) {
+            let aVal = getSortValue(a, sortColumn);
+            let bVal = getSortValue(b, sortColumn);
+
+            if (sortAscending) {
+                return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+            } else {
+                return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+            }
+        });
+
+        // Reorder rows in the DOM
+        let tbody = $("table tbody");
+        rows.forEach(function(row) {
+            tbody.append(row);
+        });
+    }
+
+    function updateSortHeader()
+    {
+        // Clear all headers
+        $("table th").each(function(index) {
+            let text = $(this).text();
+            // Remove any existing arrows
+            text = text.replace(/\s*[↑↓]\s*$/, '');
+            if (index === sortColumn) {
+                let arrow = sortAscending ? '↑' : '↓';
+                $(this).text(text + ' ' + arrow);
+            } else {
+                $(this).text(text);
             }
         });
     }
@@ -89,6 +160,23 @@
 
     $(document).ready(function()
     {
+        updateSortHeader();
+
+        // Add click handlers to header cells
+        $("table th").click(function() {
+            let newColumn = $(this).index();
+            if (sortColumn === newColumn) {
+                // Toggle sort direction
+                sortAscending = !sortAscending;
+            } else {
+                // Change sort column
+                sortColumn = newColumn;
+                sortAscending = true;
+            }
+            updateSortHeader();
+            updateList();
+        });
+
         $("#search").on("input", function()
         {
             keywords = $(this).val().toLowerCase();
@@ -114,6 +202,7 @@
         <table class="table table-sm">
             <thead>
                 <tr class="header">
+                    <th>Current Location</th>
                     <th>Inventory nr</th>
                     <th>Publication</th>
                     <th>Content</th>
@@ -125,9 +214,10 @@
             <tbody>
                 {% for side in papyrus_sides %}
                 <tr year="{{ side.year }}" year-start="{{ side.year_start }}" year-end="{{ side.year_end }}">
+                    <td>{{ side.papyrus.current_location }}</td>
                     <td><a href="/papyrus/{{ side.papyrus.pk }}?side={{ side.pk }}">{{ side.papyrus.inventory_number }}</a></td>
                     <td>{{ side.publication }}</td>
-                    <td>{{ side.content }}{% if side.content|length > 25 %}...{% endif %}</td>
+                    <td>{{ side.content|truncatechars:61 }}</td>
                     <td>
                         {% if side.year != None %}
                             {{ side.year|ce_year }}

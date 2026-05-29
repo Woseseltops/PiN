@@ -61,7 +61,7 @@ class PapyrusSideInline(admin.StackedInline):
     model = PapyrusSide
     form = PapyrusSideForm
     extra = 1  # Number of empty forms to display
-    autocomplete_fields = ['language', 'genre', 'reference']
+    autocomplete_fields = ['language', 'genre', 'references']
     exclude = []
 
 
