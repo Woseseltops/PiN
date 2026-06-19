@@ -14,6 +14,7 @@ class PapyrusSideListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu_pages'] = Page.objects.order_by('menu_bar_order')
+        context['collection_pages'] = Page.objects.filter(collection=True).order_by('menu_bar_order')
         return context
 
 class PapyrusDetailView(ListView):
@@ -24,6 +25,7 @@ class PapyrusDetailView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['menu_pages'] = Page.objects.order_by('menu_bar_order')
+        context['collection_pages'] = Page.objects.filter(collection=True).order_by('menu_bar_order')
         try:
             side_index = int(self.request.GET.get('side', 0))
         except (TypeError, ValueError):
@@ -40,8 +42,9 @@ def page_view(request, page_name):
     except Page.DoesNotExist:
         raise Http404("Page not found")
     menu_pages = Page.objects.order_by('menu_bar_order')
+    collection_pages = Page.objects.filter(collection=True).order_by('menu_bar_order')
     lang = request.GET.get('lang', 'en')
-    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'lang': lang})
+    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'collection_pages': collection_pages, 'lang': lang})
 
 def home_page_view(request):
     try:
@@ -49,5 +52,6 @@ def home_page_view(request):
     except Page.DoesNotExist:
         raise Http404("Home page not found")
     menu_pages = Page.objects.order_by('menu_bar_order')
+    collection_pages = Page.objects.filter(collection=True).order_by('menu_bar_order')
     lang = request.GET.get('lang', 'en')
-    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'lang': lang})
+    return render(request, 'papyrus/page.html', {'page': page, 'menu_pages': menu_pages, 'collection_pages': collection_pages, 'lang': lang})

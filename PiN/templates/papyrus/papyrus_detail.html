@@ -61,10 +61,11 @@
             {% for side in papyrus.sides.all %}
                 "{{ side.pk }}": {
                     "publication": "{{ side.publication|escapejs }}",
-                    "language": "{{ side.language.name|escapejs }}",
+                    "languages": [{% for language in side.languages.all %}"{{ language.name|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
                     "genre": "{{ side.genre.name|escapejs }}",
                     "year": "{% if side.year %}{{ side.year|ce_year|escapejs }}{% elif side.year_start and side.year_end %}{{ side.year_start|ce_year|escapejs }} - {{ side.year_end|ce_year|escapejs }}{% else %}Not specified{% endif %}",
                     "specific_date": "{{ side.specific_date|escapejs }}",
+                    "text": "{{ side.text|escapejs }}",
                     "content": "{{ side.content|escapejs }}",
                     "details": "{% if papyrus.material.name == 'Papyrus' %}{% if side.parallel %}Horizontal fibres{% else %}Vertical fibres{% endif %}{% elif papyrus.material.name == 'Parchment' %}{% if side.flesh %}Flesh{% else %}Hair{% endif %}{% else %}{% if side.concave %}Concave{% else %}Convex{% endif %}{% endif %}{% if side.transversa_charta %}, transversa charta{% endif %}",
                     "references": [{% for reference in side.references.all %}"{{ reference|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
@@ -91,10 +92,11 @@
             var side = sides[index];
             if (!side) return;
             $('#side_publication').text(side.publication);
-            $('#side_language').text(side.language);
+            $('#side_language').text(side.languages && side.languages.length > 0 ? side.languages.join(', ') : 'Not specified');
             $('#side_genre').text(side.genre);
             $('#side_year').text(side.year);
             $('#side_specific_date').text(side.specific_date);
+            $('#side_text').text(side.text);
             $('#side_content').text(side.content);
             $('#side_details').text(side.details);
             $('#side_reference').html(side.references && side.references.length > 0 ? side.references.join('<br>') : 'None');
@@ -248,7 +250,13 @@
                         </tr>
                         <tr>
                             <th scope="row">Language</th>
-                            <td id="side_language">{{ side.language.name }}</td>
+                            <td id="side_language">
+                                {% for language in side.languages.all %}
+                                    {{ language.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    Not specified
+                                {% endfor %}
+                            </td>
                         </tr>
                         <tr>
                             <th scope="row">Genre</th>
@@ -275,6 +283,10 @@
                         <tr>
                             <th scope="row">Content</th>
                             <td id="side_content">{{ side.content }}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Text</th>
+                            <td id="side_text">{{ side.text|default:"Not specified" }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Side</th>

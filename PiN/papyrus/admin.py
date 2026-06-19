@@ -1,7 +1,12 @@
 from .models import Editor
 from django.contrib import admin
 from django import forms
-from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation, Page
+from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation, Page, Download
+
+
+class DownloadInline(admin.TabularInline):
+    model = Download
+    extra = 1
 
 @admin.register(Editor)
 class EditorAdmin(admin.ModelAdmin):
@@ -10,6 +15,7 @@ class EditorAdmin(admin.ModelAdmin):
 @admin.register(Page)
 class PageAdmin(admin.ModelAdmin):
     list_display = [field.name for field in Page._meta.fields]
+    inlines = [DownloadInline]
 
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
@@ -61,7 +67,7 @@ class PapyrusSideInline(admin.StackedInline):
     model = PapyrusSide
     form = PapyrusSideForm
     extra = 1  # Number of empty forms to display
-    autocomplete_fields = ['language', 'genre', 'references']
+    autocomplete_fields = ['languages', 'genre', 'references']
     exclude = []
 
 

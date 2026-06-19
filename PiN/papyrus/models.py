@@ -90,12 +90,13 @@ class PapyrusSide(models.Model):
     publication = models.CharField(max_length=255)
     editors = models.ManyToManyField('Editor', blank=True)
     published = models.BooleanField(default=True, help_text='Visible in list view')
-    language = models.ForeignKey(Language, on_delete=models.DO_NOTHING)
-    genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING)
+    languages = models.ManyToManyField(Language, blank=True)
+    genre = models.ForeignKey(Genre, on_delete=models.DO_NOTHING, null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
     year_start = models.IntegerField(null=True, blank=True)
     year_end = models.IntegerField(null=True, blank=True)
     specific_date = models.TextField(null=True, blank=True)
+    text = models.TextField(null=True, blank=True)
     content = models.TextField(null=True, blank=True)
     parallel = models.BooleanField(default=False)
     flesh = models.BooleanField(default=False)
@@ -104,7 +105,10 @@ class PapyrusSide(models.Model):
     references = models.ManyToManyField(Reference, blank=True)
 
     def __str__(self):
-        return f'{self.papyrus.inventory_number} - {self.publication} - {self.language}'
+        languages = ''
+        if self.pk:
+            languages = ', '.join(self.languages.values_list('name', flat=True))
+        return f'{self.papyrus.inventory_number} - {self.publication} - {languages or "No language"}'
 
 class Image(models.Model):
     papyrus_side = models.ForeignKey(PapyrusSide, related_name='images', on_delete=models.CASCADE)
@@ -124,6 +128,16 @@ class Page(models.Model):
     menu_bar_order = models.IntegerField(default=0)
     is_list_view = models.BooleanField(default=False)
     is_home = models.BooleanField(default=False, help_text="Set this page as the home page.")
+    collection = models.BooleanField(default=False, help_text='Set this page as a collection page.')
 
     def __str__(self):
         return self.title_en
+
+
+class Download(models.Model):
+    page = models.ForeignKey(Page, related_name='downloads', on_delete=models.CASCADE)
+    file = models.FileField(upload_to='downloads/')
+    title = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.title or self.file.name

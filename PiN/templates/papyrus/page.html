@@ -42,6 +42,17 @@
                         {{ page.content_en|linebreaks }}
                     {% endif %}
                 </div>
+                <div class="mt-4">
+                    {% for download in page.downloads.all %}
+                        <a class="btn btn-outline-primary me-2 mb-2" href="{{ download.file.url }}" target="_blank">
+                            {% if download.title %}
+                                {{ download.title }}
+                            {% else %}
+                                {{ download.file.name }}
+                            {% endif %}
+                        </a>
+                    {% endfor %}
+                </div>
                 <!-- RU logo moved below language selection -->
             </div>
         </div>
