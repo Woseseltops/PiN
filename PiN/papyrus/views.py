@@ -104,7 +104,7 @@ def iiif_image_info(request, image_id):
 
     base_id = request.build_absolute_uri(
         reverse('iiif_image_info', kwargs={'image_id': image_obj.pk})
-    ).removesuffix('/info.json')
+    ).removesuffix('/info.json').replace('http://', 'https://', 1)
 
     data = {
         '@context': 'http://iiif.io/api/image/2/context.json',
