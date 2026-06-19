@@ -25,6 +25,7 @@ from papyrus.views import (
     home_page_view,
     iiif_image_info,
     iiif_image,
+    iiif_redirect,
 )
 
 
@@ -33,6 +34,7 @@ urlpatterns = [
     path('', home_page_view, name='home'),
     path('papyrus-sides/', PapyrusSideListView.as_view(), name='papyrus_side_list'),
     path('papyrus/<int:pk>/', PapyrusDetailView.as_view(), name='papyrus_detail'),
+    path('iiif/2/<int:image_id>', iiif_redirect, name='iiif_redirect'),
     path('iiif/2/<int:image_id>/info.json', iiif_image_info, name='iiif_image_info'),
     path(
         'iiif/2/<int:image_id>/<str:region>/<str:size>/<str:rotation>/<str:quality_format>',

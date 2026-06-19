@@ -127,3 +127,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_TRUSTED_ORIGINS = ["https://pin-dev.rich.ru.nl","https://pin.rich.ru.nl"]
+
+# Trust the X-Forwarded-Proto header set by the HTTPS reverse proxy
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

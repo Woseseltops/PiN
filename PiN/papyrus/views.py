@@ -89,6 +89,11 @@ def _parse_rotation(rotation):
     return value
 
 
+def iiif_redirect(request, image_id):
+    from django.shortcuts import redirect
+    return redirect(reverse('iiif_image_info', kwargs={'image_id': image_id}), permanent=False)
+
+
 def iiif_image_info(request, image_id):
     image_obj = Image.objects.filter(pk=image_id).first()
     if not image_obj or not image_obj.image:
@@ -110,6 +115,7 @@ def iiif_image_info(request, image_id):
         'profile': ['http://iiif.io/api/image/2/level1.json'],
     }
     response = JsonResponse(data)
+    response['Content-Type'] = 'application/ld+json'
     response['Access-Control-Allow-Origin'] = '*'
     return response
 
