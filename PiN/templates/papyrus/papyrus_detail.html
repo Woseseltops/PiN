@@ -121,7 +121,6 @@
             currentImage = index;
 
             // Animate in new images
-            var $container = $('#side_images');
             var side = sides[index];
             if (!side) return;
 
@@ -326,7 +325,7 @@
                     <img src="{{ image.image.url }}" class="img-fluid mb-2" alt="Papyrus Image" style="max-width:100%;height:auto;" title="{{ image.credit|default:'' }}" />
                 </a>
             {% endfor %}
-        </div>
+            </div>
 
         </div>
     </main>

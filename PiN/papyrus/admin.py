@@ -105,4 +105,10 @@ class PapyrusAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
-    list_display = ('papyrus_side', 'image')
+    list_display = ('papyrus_side', 'image', 'local_iiif_info_path')
+    search_fields = ('papyrus_side__publication', 'papyrus_side__papyrus__inventory_number')
+
+    def local_iiif_info_path(self, obj):
+        return f'/iiif/2/{obj.pk}/info.json' if obj.image else '-'
+
+    local_iiif_info_path.short_description = 'Local IIIF info.json'

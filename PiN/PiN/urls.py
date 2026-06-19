@@ -18,7 +18,14 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from papyrus.views import PapyrusSideListView, PapyrusDetailView, page_view, home_page_view
+from papyrus.views import (
+    PapyrusSideListView,
+    PapyrusDetailView,
+    page_view,
+    home_page_view,
+    iiif_image_info,
+    iiif_image,
+)
 
 
 urlpatterns = [
@@ -26,6 +33,12 @@ urlpatterns = [
     path('', home_page_view, name='home'),
     path('papyrus-sides/', PapyrusSideListView.as_view(), name='papyrus_side_list'),
     path('papyrus/<int:pk>/', PapyrusDetailView.as_view(), name='papyrus_detail'),
+    path('iiif/2/<int:image_id>/info.json', iiif_image_info, name='iiif_image_info'),
+    path(
+        'iiif/2/<int:image_id>/<str:region>/<str:size>/<str:rotation>/<str:quality_format>',
+        iiif_image,
+        name='iiif_image',
+    ),
     path('<str:page_name>/', page_view, name='page'),
 ]
 
