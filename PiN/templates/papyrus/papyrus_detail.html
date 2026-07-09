@@ -70,7 +70,7 @@
                     "details": "{% if papyrus.material.name == 'Papyrus' %}{% if side.parallel %}Horizontal fibres{% else %}Vertical fibres{% endif %}{% elif papyrus.material.name == 'Parchment' %}{% if side.flesh %}Flesh{% else %}Hair{% endif %}{% else %}{% if side.concave %}Concave{% else %}Convex{% endif %}{% endif %}{% if side.transversa_charta %}, transversa charta{% endif %}",
                     "references": [{% for reference in side.references.all %}"{{ reference|escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
                     "links": [
-                        {% for link in side.papyrus.links.all %}
+                        {% for link in side.links.all %}
                             {"url": "{{ link.url|escapejs }}", "description": "{{ link.description|escapejs }}"}{% if not forloop.last %},{% endif %}
                         {% endfor %}
                     ],
@@ -305,8 +305,8 @@
                         <tr>
                             <th scope="row">Links</th>
                             <td id="side_links">
-                                {% if side.papyrus.links.all %}
-                                    {% for link in side.papyrus.links.all %}
+                                {% if side.links.all %}
+                                    {% for link in side.links.all %}
                                         <a href="{{ link.url }}" target="_blank">{{ link.description }}</a><br>
                                     {% endfor %}
                                 {% else %}

@@ -9,7 +9,7 @@ from papyrus.models import PapyrusSide
 
 class Command(BaseCommand):
     help = (
-        "Fetch XML from papyri.info links and populate PapyrusSide.text with the "
+        "Fetch XML from papyri.info links attached to each side and populate PapyrusSide.text with the "
         "contents of <text><body>."
     )
 
@@ -59,7 +59,7 @@ class Command(BaseCommand):
         self._log_info(f"Force overwrite: {'yes' if force else 'no'}")
         self._log_info(f"Timeout: {timeout}s")
 
-        queryset = PapyrusSide.objects.select_related("papyrus").prefetch_related("papyrus__links")
+        queryset = PapyrusSide.objects.select_related("papyrus").prefetch_related("links")
         self._log_info(f"Loaded {queryset.count()} papyrus sides")
 
         for side in queryset:
@@ -73,13 +73,11 @@ class Command(BaseCommand):
                 )
                 continue
 
-            papyri_links = [
-                link.url for link in side.papyrus.links.all() if "papyri.info" in (link.url or "")
-            ]
+            side_links = [link.url for link in side.links.all() if "papyri.info" in (link.url or "")]
 
-            self._log_info(f"Found {len(papyri_links)} papyri.info link(s) on papyrus {side.papyrus_id}.")
+            self._log_info(f"Found {len(side_links)} papyri.info link(s) on side {side.pk}.")
 
-            if not papyri_links:
+            if not side_links:
                 skipped += 1
                 self._log_warning(f"{self.ICON_SKIP} Skipped: no papyri.info links.")
                 continue
@@ -87,7 +85,7 @@ class Command(BaseCommand):
             extracted_text = None
             last_error = None
 
-            for link in papyri_links:
+            for link in side_links:
                 self._log_step(f"{self.ICON_LINK} Candidate URL: {link}", self.COLOR_BLUE)
                 xml_url = self._to_source_url(link)
                 self._log_step(f"{self.ICON_FETCH} Fetching source XML: {xml_url}", self.COLOR_CYAN)

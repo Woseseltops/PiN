@@ -78,7 +78,7 @@ class Dimension(models.Model):
     height = models.FloatField(null=True, blank=True)
 
 class Link(models.Model):
-    item = models.ForeignKey(Papyrus, related_name='links', on_delete=models.CASCADE)
+    papyrus_side = models.ForeignKey('PapyrusSide', related_name='links', on_delete=models.CASCADE)
     url = models.URLField()
     description = models.CharField(max_length=255, null=True, blank=True)
 

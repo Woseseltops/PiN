@@ -50,10 +50,6 @@ class DimensionInline(admin.TabularInline):  # or admin.StackedInline
     extra = 0  # how many empty forms to show
     min_num = 1
 
-class LinkInline(admin.TabularInline):
-    model = Link
-    extra = 1  # Number of empty forms to display
-
 class PapyrusSideForm(forms.ModelForm):
     class Meta:
         model = PapyrusSide
@@ -93,7 +89,7 @@ class PublishedListFilter(admin.SimpleListFilter):
 @admin.register(Papyrus)
 class PapyrusAdmin(admin.ModelAdmin):
     autocomplete_fields = ['material', 'shape', 'finding_location', 'current_location']
-    inlines = [DimensionInline, PapyrusSideInline, LinkInline]
+    inlines = [DimensionInline, PapyrusSideInline]
     list_display = ('inventory_number', 'current_location', 'published_column', 'material', 'shape')
     list_filter = ('current_location', 'material', 'shape', PublishedListFilter)
 
@@ -102,6 +98,11 @@ class PapyrusAdmin(admin.ModelAdmin):
         
     published_column.boolean = True
     published_column.short_description = 'Published'
+
+@admin.register(Link)
+class LinkAdmin(admin.ModelAdmin):
+    list_display = ('papyrus_side', 'url', 'description')
+    search_fields = ('url', 'description', 'papyrus_side__publication', 'papyrus_side__papyrus__inventory_number')
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
