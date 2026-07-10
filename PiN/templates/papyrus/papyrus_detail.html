@@ -284,10 +284,6 @@
                             <td id="side_content">{{ side.content }}</td>
                         </tr>
                         <tr>
-                            <th scope="row">Text</th>
-                            <td id="side_text">{{ side.text|default:"Not specified" }}</td>
-                        </tr>
-                        <tr>
                             <th scope="row">Side</th>
                             <td id="side_details">
                             </td>
@@ -313,6 +309,10 @@
                                     None
                                 {% endif %}
                             </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Text</th>
+                            <td id="side_text">{{ side.text|default:"Not specified" }}</td>
                         </tr>
                     </tbody>
                 </table>
