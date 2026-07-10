@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, urlunsplit
 from urllib.request import urlopen
 from xml.etree import ElementTree as ET
 
@@ -125,17 +125,18 @@ class Command(BaseCommand):
         )
 
     def _to_source_url(self, url):
-        parsed = urlparse(url)
-        path = parsed.path or ""
+        # urlsplit keeps ";..." segments in the path, which is required for papyri.info IDs.
+        split = urlsplit(url)
+        path = split.path or ""
 
         if path.endswith("/source"):
-            return url
+            return urlunsplit((split.scheme, split.netloc, path, "", ""))
 
         if path.endswith("/"):
             path = path[:-1]
 
         new_path = f"{path}/source"
-        return parsed._replace(path=new_path, query="", fragment="").geturl()
+        return urlunsplit((split.scheme, split.netloc, new_path, "", ""))
 
     def _fetch_xml(self, url, timeout):
         with urlopen(url, timeout=timeout) as response:
