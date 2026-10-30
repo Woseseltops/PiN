@@ -198,6 +198,7 @@
                     <th>Shape</th>
                     <th>Finding Location</th>
                     <th>Dimensions</th>
+                    <th>Thumbnail</th>
                 </tr>
             </thead>
             <tbody>
@@ -233,6 +234,13 @@
                         {% empty %}
                             Not specified
                         {% endfor %}
+                    </td>
+                    <td>
+                        {% if side.images.first %}
+                            <img src="{{ side.images.first.image.url }}" alt="Thumbnail" width="100">
+                        {% else %}
+                            No Image
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
