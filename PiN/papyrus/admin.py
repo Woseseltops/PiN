@@ -1,6 +1,9 @@
 from .models import Editor
 from django.contrib import admin
 from django import forms
+from django.core.files.uploadedfile import UploadedFile, SimpleUploadedFile
+from io import BytesIO
+from PIL import Image as PilImage
 from .models import Papyrus, PapyrusSide, Material, Shape, Language, Genre, Reference, Image, Dimension, Link, FindingLocation, CurrentLocation, Page, Download
 
 
@@ -59,6 +62,30 @@ class PapyrusSideForm(forms.ModelForm):
             'editors': 'Editor(s)',
         }
 
+class ImageAdminForm(forms.ModelForm):
+    class Meta:
+        model = Image
+        fields = '__all__'
+
+    def clean_image(self):
+        uploaded = self.cleaned_data.get('image')
+        if not isinstance(uploaded, UploadedFile):
+            return uploaded
+
+        uploaded.seek(0)
+        with PilImage.open(uploaded) as source:
+            if source.format != 'TIFF':
+                uploaded.seek(0)
+                return uploaded
+
+            source.seek(0)
+            mode = 'RGBA' if 'A' in source.getbands() else 'RGB'
+            png = BytesIO()
+            source.convert(mode).save(png, format='PNG')
+
+        filename = uploaded.name.rsplit('.', 1)[0] + '.png'
+        return SimpleUploadedFile(filename, png.getvalue(), content_type='image/png')
+
 class PapyrusSideInline(admin.StackedInline):
     model = PapyrusSide
     form = PapyrusSideForm
@@ -106,6 +133,7 @@ class LinkAdmin(admin.ModelAdmin):
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
+    form = ImageAdminForm
     list_display = ('papyrus_side', 'image', 'local_iiif_info_path')
     search_fields = ('papyrus_side__publication', 'papyrus_side__papyrus__inventory_number')
 

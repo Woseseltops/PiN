@@ -188,7 +188,6 @@
                     <th scope="col">Shape</th>
                     <th scope="col">Finding Location</th>
                     <th scope="col">Provenance</th>
-                    <th scope="col">Provenance URL</th>
                     <th scope="col">Current Location</th>
                     <th scope="col">Dimensions</th>
                 </tr>
@@ -199,12 +198,11 @@
                     <td>{{ papyrus.material.name }}</td>
                     <td>{{ papyrus.shape.name }}</td>
                     <td>{{ papyrus.finding_location }}</td>
-                    <td>{{ papyrus.provenance_short_description|default:"Not specified" }}</td>
                     <td>
                         {% if papyrus.provenance_url %}
-                            <a href="{{ papyrus.provenance_url }}" target="_blank">{{ papyrus.provenance_url }}</a>
+                            <a href="{{ papyrus.provenance_url }}" target="_blank">{{ papyrus.provenance_short_description|default:"Not specified" }}</a>
                         {% else %}
-                            Not specified
+                            {{ papyrus.provenance_short_description|default:"Not specified" }}
                         {% endif %}
                     </td>
                     <td>{{ papyrus.current_location }}</td>

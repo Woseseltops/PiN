@@ -22,16 +22,13 @@
         table th:hover {
             background-color: #f5f5f5;
         }
-        table td:nth-child(4) {
-            font-size: 0.85rem;
-        }
     </style>
 
     <script>
     let minYear = 0;
     let maxYear = 500;
     let keywords = "";
-    let sortColumn = 4; // Default sort by Year (column index)
+    let sortColumn = 0;
     let sortAscending = true;
 
     function updateList()
@@ -82,15 +79,7 @@
 
     function getSortValue(row, column)
     {
-        if (column === 4) {
-            // Year - use numeric sort
-            let year = parseInt($(row).attr("year"));
-            if (isNaN(year)) year = parseInt($(row).attr("year-start"));
-            return year || 0;
-        } else {
-            // All other columns - get text from td
-            return $(row).find("td").eq(column).text().toLowerCase();
-        }
+        return $(row).find("td").eq(column).text().toLowerCase();
     }
 
     function sortRows(rows)
@@ -191,7 +180,7 @@
     {% include 'papyrus/menu_bar.html' %}
 
     <main class="container mb5">
-        <input type="text" id="search" class="form-control form-control-sm" placeholder="Search by title">
+        <input type="text" id="search" class="form-control form-control-sm" placeholder="Search papyri">
         <br>
         <br>
 
@@ -202,38 +191,48 @@
         <table class="table table-sm">
             <thead>
                 <tr class="header">
+                    <th>Inventory Number</th>
                     <th>Current Location</th>
-                    <th>Inventory nr</th>
-                    <th>Publication</th>
-                    <th>Content</th>
-                    <th>Year</th>
                     <th>Provenance</th>
-                    <th>Thumbnail</th>
+                    <th>Material</th>
+                    <th>Shape</th>
+                    <th>Finding Location</th>
+                    <th>Dimensions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for side in papyrus_sides %}
                 <tr year="{{ side.year }}" year-start="{{ side.year_start }}" year-end="{{ side.year_end }}">
-                    <td>{{ side.papyrus.current_location }}</td>
                     <td><a href="/papyrus/{{ side.papyrus.pk }}?side={{ side.pk }}">{{ side.papyrus.inventory_number }}</a></td>
-                    <td>{{ side.publication }}</td>
-                    <td>{{ side.content|truncatechars:61 }}</td>
                     <td>
-                        {% if side.year != None %}
-                            {{ side.year|ce_year }}
-                        {% elif side.year_start != None and side.year_end != None %}
-                            {{ side.year_start|ce_year }} - {{ side.year_end|ce_year }}
+                        {% if side.papyrus.current_location %}
+                            {{ side.papyrus.current_location }}
                         {% else %}
-                            Unknown
+                            Not specified
                         {% endif %}
                     </td>
-                    <td>{{ side.papyrus.finding_location }}</td>
                     <td>
-                        {% if side.images.first %}
-                            <img src="{{ side.images.first.image.url }}" alt="Thumbnail" width="100">
+                        {% if side.papyrus.provenance_url %}
+                            <a href="{{ side.papyrus.provenance_url }}" target="_blank">{{ side.papyrus.provenance_short_description|default:"Not specified" }}</a>
                         {% else %}
-                            No Image
+                            {{ side.papyrus.provenance_short_description|default:"Not specified" }}
                         {% endif %}
+                    </td>
+                    <td>{{ side.papyrus.material.name }}</td>
+                    <td>{{ side.papyrus.shape.name }}</td>
+                    <td>
+                        {% if side.papyrus.finding_location %}
+                            {{ side.papyrus.finding_location }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% for dimension in side.papyrus.dimensions.all %}
+                            {{ dimension.width }} x {{ dimension.height }}{% if not forloop.last %}<br>{% endif %}
+                        {% empty %}
+                            Not specified
+                        {% endfor %}
                     </td>
                 </tr>
                 {% endfor %}
